@@ -1,5 +1,4 @@
 const path = require('path')
-const Dracarys = require('./Dracarys/src/index')
 
 if (typeof process.argv[2] !== 'string') {
     throw new Error("No entry point.")
@@ -41,5 +40,7 @@ if (available.error) {
 }
 
 console.log(`${available.transactionCost} pennies was taken from your wallet, you now have ${available.wallet.current}.`)
+
+const Dracarys = require('./Dracarys/src/index')
 
 entryPoint(Dracarys)
