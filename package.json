@@ -1,0 +1,23 @@
+{
+  "name": "daenerys",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build:pkg": "pkg --targets latest --compress GZip --out-path dist src\\Daenerys.js",
+    "test:build": ".\\dist\\Daenerys.exe .\\example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/at15four2020/Daenerys.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/at15four2020/Daenerys/issues"
+  },
+  "homepage": "https://github.com/at15four2020/Daenerys#readme",
+  "devDependencies": {
+    "pkg": "^5.3.1"
+  }
+}
