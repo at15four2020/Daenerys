@@ -1,10 +1,11 @@
 {
   "name": "daenerys",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
+  "bin":"bin/daenerys.js",
   "scripts": {
-    "build:pkg": "pkg --targets latest --compress GZip --out-path dist src\\Daenerys.js",
-    "test:build": ".\\dist\\Daenerys.exe .\\example"
+    "build:pkg": "pkg --targets latest-linux,latest-win,latest-macos --compress GZip --out-path bin src\\Daenerys.js",
+    "test:build": "cd example && npm run test"
   },
   "repository": {
     "type": "git",
