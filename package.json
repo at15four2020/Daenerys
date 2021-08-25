@@ -2,7 +2,7 @@
   "name": "daenerys",
   "version": "1.1.0",
   "description": "",
-  "bin":"bin/daenerys.js",
+  "bin": "bin/daenerys.js",
   "scripts": {
     "build:pkg": "pkg --targets latest-linux,latest-win,latest-macos --compress GZip --out-path bin src\\Daenerys.js",
     "test:build": "cd example && npm run test"
@@ -20,5 +20,8 @@
   "homepage": "https://github.com/at15four2020/Daenerys#readme",
   "devDependencies": {
     "pkg": "^5.3.1"
+  },
+  "dependencies": {
+    "inquirer": "^8.1.2"
   }
 }
