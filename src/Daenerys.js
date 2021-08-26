@@ -1,30 +1,67 @@
 const inquirer = require('inquirer')
 const path = require('path')
 
+const pressAnyKey = require('./utils/pressAnyKey')
+
 async function start() {
-    if (typeof process.argv[2] !== 'string') {
-        throw new Error("No entry point.")
+    let entryPointArg = process.argv[2], entryPoint
+    if (typeof entryPointArg !== 'string') {
+        console.log('No entry point for custom logic was used.')
+        const { set_now } = await inquirer.prompt({
+            type: 'confirm',
+            name: 'set_now',
+            message: 'Do you want to insert one now?',
+            default: true,
+        })
+
+        if (!set_now) {
+            let { proceed } = await inquirer.prompt({
+                type: 'confirm',
+                name: 'proceed',
+                message: 'Do you to proceed anyway?',
+                default: false,
+            })
+    
+            if (!proceed) return
+
+            entryPoint = await inquirer.prompt({
+                type: 'input',
+                name: 'AUTH_TOKEN',
+                message: 'What is your authentication token?',
+                validate: input => !!input.length,
+            })
+        } else {
+            const { entry_point_arg } = await inquirer.prompt({
+                type: 'input',
+                name: 'entry_point_arg',
+                message: 'What file/folder you want to use as entry point?',
+                validate: input => !!input.length,
+            })
+
+            entryPointArg = entry_point_arg
+        }
     }
 
-    const entryPointPath = path.join(process.cwd(), process.argv[2])
+    if (typeof entryPointArg === 'string') {
+        const entryPointPath = path.isAbsolute(entryPointArg) ? entryPointArg : path.join(process.cwd(), entryPointArg)
 
-    let entryPoint
-    try {
-        entryPoint = require(entryPointPath)
-    } catch(e) {
-        switch(e.code) {
-            case 'MODULE_NOT_FOUND':
-                throw new Error(`Entry point "${entryPointPath}" does not exist.`)
-            default:
-                throw e
+        try {
+            entryPoint = require(entryPointPath)
+        } catch(e) {
+            switch(e.code) {
+                case 'MODULE_NOT_FOUND':
+                    throw new Error(`Entry point "${entryPointPath}" does not exist.`)
+                default:
+                    throw e
+            }
         }
     }
 
     const { AUTH_TOKEN } = entryPoint
 
-    console.log("Using AUTH_TOKEN:", entryPoint.AUTH_TOKEN)
+    console.log("Using AUTH_TOKEN:", AUTH_TOKEN)
 
-    if (typeof entryPoint !== 'function') {
+    if (typeof entryPointArg === 'string' && typeof entryPoint !== 'function') {
         throw new Error("Entry point must export a function.")
     }
 
@@ -49,6 +86,8 @@ async function start() {
 
         if (helpNeeded) {
             console.log(`Go to Bay of Dragons on the southern coast of Essos (https://discord.gg/...) and get support there.`)
+
+            pressAnyKey()
         }
 
         return
@@ -75,8 +114,16 @@ async function start() {
         console.log('All ready!')
         console.log('Now you can use the power of Dracarys tool and also a servant at your disposal.')
 
-        entryPoint(Dracarys)
+        if (typeof entryPoint === 'function') {
+            entryPoint(Dracarys)
+        } else {
+            console.log('But as you didn\'t use a entry point for custom logic, the servant only recognizes the !add_sso command.')
+        }
     })
 }
 
-start()
+start().catch(e => {
+    console.log(e.message || e)
+
+    pressAnyKey()
+})
