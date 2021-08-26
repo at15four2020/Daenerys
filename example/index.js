@@ -7,6 +7,12 @@ module.exports = function(Dracarys) {
     Dracarys.discord.commands.on("ping", reply => {
         reply("pong")
     })
+
+    Dracarys.gearth.start()
+    setTimeout(() => {
+        Dracarys.habbo.start(SSO HERE)
+    }, 10 * 1000)
+    
 }
 
 module.exports.AUTH_TOKEN = 123456
