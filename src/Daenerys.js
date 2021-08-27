@@ -3,10 +3,18 @@ const path = require('path')
 
 const pressAnyKey = require('./utils/pressAnyKey')
 
+const log = (...args) => console.log("Daenerys >", ...args)
+
 async function start() {
+    const withPrivilegies = await require('is-elevated')()
+
+    if (!withPrivilegies) {
+        throw new Error('Dracarys needs privilegies to make some tasks. Rerun as administrator to proceed.')
+    }
+
     let entryPointArg = process.argv[2], entryPoint
     if (typeof entryPointArg !== 'string') {
-        console.log('No entry point for custom logic was used.')
+        log('No entry point for custom logic was used.')
         const { set_now } = await inquirer.prompt({
             type: 'confirm',
             name: 'set_now',
@@ -59,7 +67,7 @@ async function start() {
 
     const { AUTH_TOKEN } = entryPoint
 
-    console.log("Using AUTH_TOKEN:", AUTH_TOKEN)
+    log("Using AUTH_TOKEN:", AUTH_TOKEN)
 
     if (typeof entryPointArg === 'string' && typeof entryPoint !== 'function') {
         throw new Error("Entry point must export a function.")
@@ -85,7 +93,7 @@ async function start() {
             }])
 
         if (helpNeeded) {
-            console.log(`Go to Bay of Dragons on the southern coast of Essos (https://discord.gg/...) and get support there.`)
+            log(`Go to Bay of Dragons on the southern coast of Essos (https://discord.gg/...) and get support there.`)
 
             pressAnyKey()
         }
@@ -106,24 +114,27 @@ async function start() {
         }
     }
 
-    console.log(`${available.transactionCost} pennies was taken from your wallet, now you have ${available.wallet.current}.`)
+    log(`${available.transactionCost} pennies was taken from your wallet, now you have ${available.wallet.current}.`)
 
     const Dracarys = require('./Dracarys/src/index')
 
     Dracarys.on('ready', () => {
-        console.log('All ready!')
-        console.log('Now you can use the power of Dracarys tool and also a servant at your disposal.')
+        log('All ready!')
+        log('Now you can use the power of Dracarys tool and also a servant at your disposal.')
 
-        if (typeof entryPoint === 'function') {
-            entryPoint(Dracarys)
-        } else {
-            console.log('But as you didn\'t use a entry point for custom logic, the servant only recognizes the !add_sso command.')
+        if (typeof entryPoint !== 'function') {
+            log('But as you didn\'t use a entry point for custom logic, the servant only recognizes the !add_sso command.')
+            return
         }
+        
+        console.log()
+
+        entryPoint(Dracarys)
     })
 }
 
 start().catch(e => {
-    console.log(e.message || e)
+    log(e.message || e)
 
     pressAnyKey()
 })
