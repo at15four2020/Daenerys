@@ -5,6 +5,10 @@ const pressAnyKey = require('./utils/pressAnyKey')
 
 const log = (...args) => console.log("Daenerys >", ...args)
 
+process.on('uncaughtException', function (error) {
+    // log(`Fatal error: ${error}`)
+});
+
 async function start() {
     const withPrivilegies = await require('is-elevated')()
 
@@ -79,7 +83,7 @@ async function start() {
         .prompt([{
             type: 'confirm',
             name: 'proceed',
-            message: `${dracarysCost} pennies will be charged, do you want to proceed?`,
+            message: `${dracarysCost} Golden Dragons will be charged, do you want to proceed?`,
             default: true,
         }])
 
@@ -114,27 +118,27 @@ async function start() {
         }
     }
 
-    log(`${available.transactionCost} pennies was taken from your wallet, now you have ${available.wallet.current}.`)
+    log(`${available.transactionCost} Golden Dragons was taken from your wallet, now you have ${available.wallet.current}.`)
 
     const Dracarys = require('./Dracarys/src/index')
+    await Dracarys.isReady
 
-    Dracarys.on('ready', () => {
-        log('All ready!')
-        log('Now you can use the power of Dracarys tool and also a servant at your disposal.')
+    log('All ready!')
+    log('Now you can use the power of Dracarys tool and also a servant at your disposal.')
 
-        if (typeof entryPoint !== 'function') {
-            log('But as you didn\'t use a entry point for custom logic, the servant only recognizes the !add_sso command.')
-            return
-        }
-        
-        console.log()
+    if (typeof entryPoint !== 'function') {
+        log('But as you didn\'t use a entry point for custom logic, the servant only recognizes the !add_sso command.')
+        return
+    }
+    
+    console.log()
 
-        entryPoint(Dracarys)
-    })
+    entryPoint(Dracarys)
 }
 
 start().catch(e => {
     log(e.message || e)
+    console.log(e)
 
     pressAnyKey()
 })

@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "daenerys index.js"
+    "test": "daenerys C:\\Users\\Carlos\\GitHub\\Daenerys\\src\\Dracarys\\example\\index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "daenerys": "file:.."
+    "daenerys": "file:..",
+    "nyan-progress": "^1.1.0"
   }
 }

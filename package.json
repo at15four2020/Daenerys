@@ -4,6 +4,7 @@
   "description": "",
   "bin": "bin/daenerys.js",
   "scripts": {
+    "test": "node src/Daenerys.js example",
     "build:pkg": "pkg --targets latest-linux,latest-win,latest-macos --compress GZip --out-path bin src\\Daenerys.js",
     "test:build": "cd example && npm run test"
   },

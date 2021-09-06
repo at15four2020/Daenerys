@@ -4,3 +4,4 @@ bin/*
 !bin/daenerys.js
 .vscode/
 cacheConfig.json
+dracarysConfig.json
